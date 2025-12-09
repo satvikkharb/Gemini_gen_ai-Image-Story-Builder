@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 import os
 from google import genai
-
+from gtts import gTTS
+from io import BytesIO
 
 load_dotenv()
 
@@ -49,3 +50,13 @@ def generate_story_from_images(images, style):
     contents = [images,create_advanced_prompt(style)]
 )   
     return response.text
+
+def narrate_story(story_text):
+    try:
+        tts= gTTS(text=story_text, lang="en", slow=False)
+        audio_fp = BytesIO()
+        tts.write_to_fp(audio_fp)
+        audio_fp.seek(0)
+        return audio_fp
+    except Exception as e:
+        return f"An unexpected error  occured during the API call"
